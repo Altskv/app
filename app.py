@@ -1,96 +1,116 @@
 import streamlit as st
 import random
 
-# Установка основной цветовой схемы и стилей
-st.set_page_config(page_title="Event Planning Simulation", page_icon="🎉")
+# Page setup
+st.set_page_config(page_title="Organize Your Perfect Event", page_icon="🎉")
 
-# Основные стили
+# Styling for a modern, minimalist look
 st.markdown("""
     <style>
-    .title {
-        font-size: 2em;
-        color: #1E90FF;
-        font-weight: bold;
-    }
-    .subheader {
-        font-size: 1.5em;
-        color: #333333;
-    }
-    .task {
-        font-size: 1.2em;
-        color: #555555;
-    }
-    .result {
-        font-size: 1.3em;
-        font-weight: bold;
-        color: #228B22;
-    }
-    .section-divider {
-        border-top: 1px solid #D3D3D3;
-        margin: 10px 0;
-    }
+    .title { font-size: 2em; color: #4B8BBE; text-align: center; font-weight: bold; }
+    .subheader { font-size: 1.5em; color: #333333; }
+    .result { font-size: 1.3em; font-weight: bold; color: #228B22; }
+    .highlight { font-size: 1.1em; color: #DD4B39; font-weight: bold; }
+    .progress { font-size: 1.1em; color: #4B8BBE; }
     </style>
 """, unsafe_allow_html=True)
 
-# Заголовок приложения
-st.markdown('<p class="title">Event Planning: Traditional vs. rentArest</p>', unsafe_allow_html=True)
+# Title
+st.markdown('<p class="title">Organize Your Perfect Event: Traditional vs. rentArest</p>', unsafe_allow_html=True)
+st.write("Plan your event first the traditional way and then using rentArest to see the difference!")
 
-st.write("### Сравните традиционный способ планирования мероприятий и автоматизацию с помощью rentArest.")
-st.write("**Цель**: Увидеть, насколько rentArest экономит ваше время и усилия при планировании мероприятий.")
+# Define variables to store total times
+if "traditional_time" not in st.session_state:
+    st.session_state["traditional_time"] = 0
+if "rentArest_time" not in st.session_state:
+    st.session_state["rentArest_time"] = 0
 
-# Симуляция традиционного способа
-def traditional_method():
-    st.markdown('<p class="subheader">Традиционный способ</p>', unsafe_allow_html=True)
-    total_time = 0
-    tasks = [
-        ("Поиск подходящего места", random.randint(10, 15)),
-        ("Согласование даты с площадкой", random.randint(5, 10)),
-        ("Поиск кейтеринга", random.randint(8, 12)),
-        ("Заказ услуг развлечения", random.randint(6, 10)),
-        ("Обеспечение транспортировки", random.randint(4, 8))
-    ]
+# Step 1: Traditional Planning Method
+if "traditional_completed" not in st.session_state:
+    st.write("## Step 1: Traditional Planning Method")
+    st.write("### Imagine you are organizing your event step-by-step without any digital assistance.")
 
-    for task, duration in tasks:
-        st.markdown(f'<p class="task">• {task}... ({duration} минут)</p>', unsafe_allow_html=True)
-        total_time += duration
+    def traditional_method():
+        # Initialize total time
+        total_time = 0
 
-    st.markdown(f'<p class="result">Всего времени потрачено на традиционное планирование: {total_time} минут</p>', unsafe_allow_html=True)
-    return total_time
+        # Task 1: Venue Selection
+        st.write("**Task 1: Select a Venue**")
+        venue_choice = st.radio("Where will you start?", ["Select an option", "Browse online listings", "Visit venues in person", "Ask friends for recommendations"], key="venue_choice")
+        if venue_choice != "Select an option":
+            if venue_choice == "Browse online listings":
+                total_time += random.randint(60, 90)
+            elif venue_choice == "Visit venues in person":
+                total_time += random.randint(120, 180)
+            else:
+                total_time += random.randint(40, 60)
 
-# Симуляция с rentArest
-def rentArest_method():
-    st.markdown('<p class="subheader">Планирование с помощью rentArest</p>', unsafe_allow_html=True)
-    total_time = 0
-    tasks = [
-        ("Выбор типа мероприятия и бюджета", 2),
-        ("Получение рекомендаций площадок", 1),
-        ("Выбор кейтеринга и развлечений", 1),
-        ("Подтверждение заказа", 1)
-    ]
+        # Task 2: Catering
+        st.write("**Task 2: Arrange Catering**")
+        catering_choice = st.radio("How will you arrange catering?", ["Select an option", "Search local caterers online", "Visit catering businesses", "Order from a popular restaurant"], key="catering_choice")
+        if catering_choice != "Select an option":
+            if catering_choice == "Search local caterers online":
+                total_time += random.randint(60, 90)
+            elif catering_choice == "Visit catering businesses":
+                total_time += random.randint(90, 120)
+            else:
+                total_time += random.randint(45, 60)
 
-    for task, duration in tasks:
-        st.markdown(f'<p class="task">• {task}... ({duration} минуты)</p>', unsafe_allow_html=True)
-        total_time += duration
+        # Task 3: Entertainment
+        st.write("**Task 3: Book Entertainment**")
+        entertainment_choice = st.radio("How will you arrange entertainment?", ["Select an option", "Hire a DJ", "Book live performers", "Set up a playlist yourself"], key="entertainment_choice")
+        if entertainment_choice != "Select an option":
+            if entertainment_choice == "Hire a DJ":
+                total_time += random.randint(40, 60)
+            elif entertainment_choice == "Book live performers":
+                total_time += random.randint(90, 120)
+            else:
+                total_time += random.randint(20, 30)
 
-    st.markdown(f'<p class="result">Всего времени потрачено на планирование с rentArest: {total_time} минуты</p>', unsafe_allow_html=True)
-    return total_time
+        # Check if all tasks have selections before completing
+        if venue_choice != "Select an option" and catering_choice != "Select an option" and entertainment_choice != "Select an option":
+            st.session_state["traditional_time"] = total_time
+            st.session_state["traditional_completed"] = True
+            st.write(f"**Total time for traditional planning: {total_time} minutes**")
 
-# Основной блок приложения
-if st.button("Начать симуляцию"):
-    traditional_time = traditional_method()
-    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-    rentArest_time = rentArest_method()
+    traditional_method()
 
-    # Сравнение результатов
-    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-    st.markdown('<p class="subheader">Результаты:</p>', unsafe_allow_html=True)
-    st.write(f"Традиционное планирование заняло: **{traditional_time} минут**.")
-    st.write(f"Планирование с rentArest заняло: **{rentArest_time} минуты**.")
+# Step 2: rentArest Planning Method
+if "traditional_completed" in st.session_state and "rentArest_completed" not in st.session_state:
+    st.write("## Step 2: Planning with rentArest")
+    st.write("### Now see how rentArest simplifies the entire process with just a few clicks.")
 
-    if rentArest_time < traditional_time:
-        st.markdown(f'<p class="result">Вы сэкономили {traditional_time - rentArest_time} минут благодаря rentArest!</p>', unsafe_allow_html=True)
-        st.success("rentArest упрощает процесс и экономит ваше время.")
-    else:
-        st.info("С rentArest вы получаете удобство и меньше стресса!")
+    def rentArest_method():
+        total_time = 0
 
-st.write("Нажмите на кнопку выше, чтобы начать!")
+        # Task 1: Venue Selection
+        st.write("**Task 1: Select a Venue**")
+        st.write("With rentArest, you quickly find a venue that meets your needs with just a few clicks.")
+        total_time += 10
+
+        # Task 2: Catering
+        st.write("**Task 2: Arrange Catering**")
+        st.write("rentArest provides a list of caterers tailored to your budget and preferences.")
+        total_time += 10
+
+        # Task 3: Book Entertainment
+        st.write("**Task 3: Book Entertainment**")
+        st.write("With rentArest, you can book entertainment in minutes from recommended options.")
+        total_time += 5
+
+        # Total time for rentArest method
+        st.session_state["rentArest_time"] = total_time
+        st.session_state["rentArest_completed"] = True
+        st.write(f"**Total time with rentArest: {total_time} minutes**")
+
+    rentArest_method()
+
+# Step 3: Compare Results
+if "traditional_completed" in st.session_state and "rentArest_completed" in st.session_state:
+    st.write("## Results Comparison")
+    st.write(f"**Traditional planning took: {st.session_state['traditional_time']} minutes.**")
+    st.write(f"**Planning with rentArest took: {st.session_state['rentArest_time']} minutes.**")
+    
+    time_saved = st.session_state["traditional_time"] - st.session_state["rentArest_time"]
+    st.write(f"**Time saved using rentArest: {time_saved} minutes!**")
+    st.success("With rentArest, planning becomes faster, more efficient, and hassle-free!")
